@@ -1,4 +1,6 @@
 <?php
+
+
 //main connection file for both admin & front end
 $servername = "localhost"; //server
 $username = "root"; //username
@@ -13,9 +15,7 @@ if (!$db) {       //checking connection to DB
 }
 
 
-// Handle form submission
 ?>
-
 
 <html lang="en">
 
@@ -159,15 +159,41 @@ if (!$db) {       //checking connection to DB
 
 
 
+
 <body>
     <div class="container">
+
+        <!-- Rest of your HTML code remains unchanged -->
 
         <div class="receipt_header">
             <h1>Receipt of Sale <span>Sulit Puguan</span></h1>
             <h2>Address: Mabini, Libmanan, Camarines Sur <span>Tel: +1 012 345 67 89</span></h2>
+            <?php function generateReferenceNumber()
+            {
+                // Static text for the reference number
+                $prefix = "REF";
+
+                // Current date in a specific format
+                $date = date("Ymd");
+
+                // Random number for uniqueness
+                $randomNumber = mt_rand(1000, 9999);
+
+                // Combine the elements to create the reference number
+                $referenceNumber = $prefix . $date . $randomNumber;
+
+                return $referenceNumber;
+            }
+            // Example usage
+            $fixedReference = generateReferenceNumber();
+            echo "" . $fixedReference;
+            ?>
         </div>
 
+        <!-- Rest of your HTML code remains unchanged -->
+
         <div class="receipt_body">
+
 
 
 
@@ -186,6 +212,8 @@ if (!$db) {       //checking connection to DB
                             echo '
                             <div class="date_time_con">
                             <div class="date">' . date_format(date_create($rows['date']), "M, D, Y, g:i A") .  '</div>
+
+                            
 
                         </div>
                         <thead>
