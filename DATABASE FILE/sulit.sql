@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2023 at 03:04 PM
+-- Generation Time: Dec 17, 2023 at 02:44 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -112,7 +112,8 @@ CREATE TABLE `expense` (
 
 INSERT INTO `expense` (`ID`, `Category`, `Item`, `Cost`, `Date`) VALUES
 (30, 'Bills', 'Water', 1000.00, '2023-10-16 07:13:54'),
-(31, 'Bills', 'Electric', 150.00, '2023-10-16 07:15:07');
+(31, 'Bills', 'Electric', 150.00, '2023-10-16 07:15:07'),
+(37, 'Transpo', 'gas', 45.00, '2023-12-16 10:26:48');
 
 -- --------------------------------------------------------
 
@@ -137,7 +138,7 @@ INSERT INTO `livestock` (`rs_id`, `c_id`, `title`, `image`, `address`, `date`) V
 (12, 6, 'Pugo egg', '64ca7a08a8c6c.jpg', 'masarap kahit walang manok.\r\n', '2023-08-02 15:45:12'),
 (13, 6, 'Pugo meat', '64ca7a47daa66.jpg', 'masarap kahit hilaw', '2023-08-02 15:46:15'),
 (14, 6, 'Live pugo', '6518cfe7f1cc7.jpg', '  masarap kahit walang sauce', '2023-10-01 01:48:23'),
-(26, 6, 'hakdog', '65705b825c82a.jpg', 'hakdog city', '2023-12-06 11:31:14');
+(26, 6, 'kambing', '657d538dbec08.jpg', '  asdfghjuyggfchjn ', '2023-12-16 07:36:45');
 
 -- --------------------------------------------------------
 
@@ -162,7 +163,7 @@ INSERT INTO `materials` (`m_id`, `materials`, `status`, `date`) VALUES
 (9, 'hadksdohfo', 'Inactive', '2023-12-06 10:19:54'),
 (10, 'hehehe', 'Inactive', '2023-12-06 11:33:49'),
 (11, 'sgfbv ', 'Inactive', '2023-12-06 13:51:56'),
-(12, 'haksorgiasfnkwa', 'Active', '2023-12-06 13:52:03');
+(12, 'haksorgiasfnkwa', 'Inactive', '2023-12-16 02:23:53');
 
 -- --------------------------------------------------------
 
@@ -183,12 +184,9 @@ CREATE TABLE `pro_duct` (
 --
 
 INSERT INTO `pro_duct` (`d_id`, `rs_id`, `title`, `stock`, `price`) VALUES
-(24, 15, 'longgasinga(short)', 900, 30.00),
-(25, 15, 'tosino', 9, 15.00),
-(26, 14, 'Piece', 0, 35.00),
-(27, 12, 'Packed Dressed Meat(5pcs.)', 0, 500.00),
-(28, 13, 'dressed meat', 33, 100.00),
-(29, 12, 'Pack(50 pieces)', 89, 500.00);
+(28, 13, 'dressed meat', 900, 100.00),
+(35, 13, 'tosino', 67, 457.00),
+(36, 13, 'ahs', 43, 67.00);
 
 -- --------------------------------------------------------
 
@@ -362,6 +360,7 @@ CREATE TABLE `users_orders` (
   `title` varchar(222) NOT NULL,
   `quantity` int(222) NOT NULL,
   `price` decimal(10,2) NOT NULL,
+  `total` int(250) NOT NULL,
   `status` varchar(222) DEFAULT NULL,
   `date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
@@ -370,10 +369,13 @@ CREATE TABLE `users_orders` (
 -- Dumping data for table `users_orders`
 --
 
-INSERT INTO `users_orders` (`o_id`, `u_id`, `d_id`, `title`, `quantity`, `price`, `status`, `date`) VALUES
-(26, 8, 28, 'dressed meat', 11, 100.00, 'closed', '2023-10-16 08:56:22'),
-(27, 8, 27, 'Packed Dressed Meat(5pcs.)', 19, 500.00, 'closed', '2023-10-17 07:03:56'),
-(28, 8, 27, 'Packed Dressed Meat(5pcs.)', 1, 500.00, 'closed', '2023-10-20 08:25:29');
+INSERT INTO `users_orders` (`o_id`, `u_id`, `d_id`, `title`, `quantity`, `price`, `total`, `status`, `date`) VALUES
+(32, 8, 29, 'ahsljsjcxm', 2, 67.00, 134, 'closed', '2023-12-16 09:57:38'),
+(33, 8, 28, 'dressed meat', 2, 100.00, 334, NULL, '2023-12-16 06:35:10'),
+(34, 8, 35, 'tosino', 1, 457.00, 457, NULL, '2023-12-16 06:35:55'),
+(35, 8, 28, 'dressed meat', 3, 100.00, 300, NULL, '2023-12-16 08:24:45'),
+(36, 8, 28, 'dressed meat', 4, 100.00, 400, NULL, '2023-12-16 08:26:35'),
+(37, 8, 35, 'tosino', 2, 457.00, 1314, NULL, '2023-12-16 08:26:35');
 
 -- --------------------------------------------------------
 
@@ -388,20 +390,19 @@ CREATE TABLE `walkin_orders` (
   `title` varchar(25) NOT NULL,
   `quantity` int(12) NOT NULL,
   `price` decimal(11,2) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT current_timestamp()
+  `total` int(250) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `walkin_orders`
 --
 
-INSERT INTO `walkin_orders` (`w_id`, `d_id`, `user`, `title`, `quantity`, `price`, `date`) VALUES
-(14, 0, ' Jaime', 'longgasinga(short)', 10, 0.00, '2023-10-17 08:10:20'),
-(15, 0, ' wsws', 'longgasinga(short)', 10, 0.00, '2023-10-17 08:21:50'),
-(16, 0, ' Narlyn', 'tosino', 10, 0.00, '2023-10-17 08:27:37'),
-(17, 0, ' Narlyn', 'longgasinga(short)', 1, 0.00, '2023-10-17 08:34:39'),
-(18, 0, ' qsqw', 'tosino', 2, 0.00, '2023-10-17 08:37:10'),
-(19, 0, ' Jaime', 'longgasinga(short)', 7, 0.00, '2023-10-17 08:56:00');
+INSERT INTO `walkin_orders` (`w_id`, `d_id`, `user`, `title`, `quantity`, `price`, `total`, `date`, `status`) VALUES
+(70, 35, 'parabakalaxSz', 'tosino', 3, 457.00, 1371, '2023-12-16 06:31:16', 'Confirm'),
+(71, 28, 'efse', 'dressed meat', 444, 100.00, 44400, '2023-12-16 07:33:17', 'Confirm'),
+(72, 35, 'parabakalaxSz', 'tosino', 99, 457.00, 451516, '2023-12-16 07:38:42', 'Confirm');
 
 --
 -- Indexes for dumped tables
@@ -511,13 +512,13 @@ ALTER TABLE `device`
 -- AUTO_INCREMENT for table `expense`
 --
 ALTER TABLE `expense`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `livestock`
 --
 ALTER TABLE `livestock`
-  MODIFY `rs_id` int(222) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `rs_id` int(222) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `materials`
@@ -526,10 +527,16 @@ ALTER TABLE `materials`
   MODIFY `m_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
+-- AUTO_INCREMENT for table `pro_duct`
+--
+ALTER TABLE `pro_duct`
+  MODIFY `d_id` int(222) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+
+--
 -- AUTO_INCREMENT for table `res_category`
 --
 ALTER TABLE `res_category`
-  MODIFY `c_id` int(222) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `c_id` int(222) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `supplies`
@@ -547,13 +554,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users_orders`
 --
 ALTER TABLE `users_orders`
-  MODIFY `o_id` int(222) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `o_id` int(222) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `walkin_orders`
 --
 ALTER TABLE `walkin_orders`
-  MODIFY `w_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `w_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
