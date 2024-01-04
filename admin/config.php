@@ -3,7 +3,7 @@
 $host = "localhost"; 
 $user = "root"; 
 $password = ""; 
-$dbname = "phponlines"; 
+$dbname = "sulit"; 
 
 $con = mysqli_connect($host, $user, $password, $dbname);
 // Check connection
