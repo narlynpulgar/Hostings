@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 17, 2023 at 02:44 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.0.28
+-- Generation Time: Jan 05, 2024 at 04:12 AM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -111,9 +111,9 @@ CREATE TABLE `expense` (
 --
 
 INSERT INTO `expense` (`ID`, `Category`, `Item`, `Cost`, `Date`) VALUES
-(30, 'Bills', 'Water', 1000.00, '2023-10-16 07:13:54'),
-(31, 'Bills', 'Electric', 150.00, '2023-10-16 07:15:07'),
-(37, 'Transpo', 'gas', 45.00, '2023-12-16 10:26:48');
+(30, 'Bills', 'Water', '1000.00', '2023-10-16 07:13:54'),
+(31, 'Bills', 'Electric', '150.00', '2023-10-16 07:15:07'),
+(37, 'Transpo', 'gas', '45.00', '2023-12-16 10:26:48');
 
 -- --------------------------------------------------------
 
@@ -184,9 +184,9 @@ CREATE TABLE `pro_duct` (
 --
 
 INSERT INTO `pro_duct` (`d_id`, `rs_id`, `title`, `stock`, `price`) VALUES
-(28, 13, 'dressed meat', 900, 100.00),
-(35, 13, 'tosino', 67, 457.00),
-(36, 13, 'ahs', 43, 67.00);
+(28, 13, 'dressed meat', 900, '100.00'),
+(35, 13, 'tosino', 67, '457.00'),
+(36, 13, 'ahs', 43, '67.00');
 
 -- --------------------------------------------------------
 
@@ -370,12 +370,23 @@ CREATE TABLE `users_orders` (
 --
 
 INSERT INTO `users_orders` (`o_id`, `u_id`, `d_id`, `title`, `quantity`, `price`, `total`, `status`, `date`) VALUES
-(32, 8, 29, 'ahsljsjcxm', 2, 67.00, 134, 'closed', '2023-12-16 09:57:38'),
-(33, 8, 28, 'dressed meat', 2, 100.00, 334, NULL, '2023-12-16 06:35:10'),
-(34, 8, 35, 'tosino', 1, 457.00, 457, NULL, '2023-12-16 06:35:55'),
-(35, 8, 28, 'dressed meat', 3, 100.00, 300, NULL, '2023-12-16 08:24:45'),
-(36, 8, 28, 'dressed meat', 4, 100.00, 400, NULL, '2023-12-16 08:26:35'),
-(37, 8, 35, 'tosino', 2, 457.00, 1314, NULL, '2023-12-16 08:26:35');
+(32, 8, 29, 'ahsljsjcxm', 2, '67.00', 134, 'closed', '2023-12-16 09:57:38'),
+(33, 8, 28, 'dressed meat', 2, '100.00', 334, NULL, '2023-12-16 06:35:10'),
+(34, 8, 35, 'tosino', 1, '457.00', 457, NULL, '2023-12-16 06:35:55'),
+(35, 8, 28, 'dressed meat', 3, '100.00', 300, NULL, '2023-12-16 08:24:45'),
+(36, 8, 28, 'dressed meat', 4, '100.00', 400, NULL, '2023-12-16 08:26:35'),
+(37, 8, 35, 'tosino', 2, '457.00', 1314, NULL, '2023-12-16 08:26:35'),
+(38, 7, 6, 'tosino', 100, '457.00', 45700, 'closed', '2023-01-10 02:48:50'),
+(39, 8, 2, 'dressed meat', 400, '100.00', 40000, 'closed', '2023-02-07 02:51:44'),
+(40, 9, 4, 'dressed meat', 200, '100.00', 20000, 'closed', '2023-03-16 02:52:32'),
+(41, 10, 5, 'tosino', 300, '457.00', 137100, 'closed', '2023-04-07 02:53:27'),
+(42, 11, 7, 'tosino', 433, '457.00', 197881, 'closed', '2023-05-02 02:54:41'),
+(43, 10, 6, 'dressed meat', 1000, '100.00', 100000, 'closed', '2023-06-12 02:56:23'),
+(44, 7, 9, 'tosino', 500, '457.00', 228500, 'closed', '2023-07-05 02:58:20'),
+(45, 8, 5, 'tosino', 300, '457.00', 137100, 'closed', '2023-08-15 03:00:19'),
+(46, 8, 5, 'tosino', 450, '457.00', 205650, 'closed', '2023-09-27 03:01:57'),
+(47, 10, 5, 'tosino', 400, '457.00', 182800, 'closed', '2023-10-11 03:02:53'),
+(48, 10, 7, 'dressed meat', 2000, '100.00', 200000, 'closed', '2023-11-14 03:04:07');
 
 -- --------------------------------------------------------
 
@@ -400,9 +411,20 @@ CREATE TABLE `walkin_orders` (
 --
 
 INSERT INTO `walkin_orders` (`w_id`, `d_id`, `user`, `title`, `quantity`, `price`, `total`, `date`, `status`) VALUES
-(70, 35, 'parabakalaxSz', 'tosino', 3, 457.00, 1371, '2023-12-16 06:31:16', 'Confirm'),
-(71, 28, 'efse', 'dressed meat', 444, 100.00, 44400, '2023-12-16 07:33:17', 'Confirm'),
-(72, 35, 'parabakalaxSz', 'tosino', 99, 457.00, 451516, '2023-12-16 07:38:42', 'Confirm');
+(1, 2, 'hehe', 'tosino', 5, '457.00', 2285, '2023-01-03 02:19:50', 'Confirm'),
+(2, 2, 'haha', 'dressed meat', 10, '100.00', 1000, '2023-02-08 02:21:19', 'Confirm'),
+(3, 4, 'cj', 'tosino', 100, '457.00', 45700, '2023-03-03 02:22:09', 'Confirm'),
+(4, 5, 'ron', 'tosino', 200, '457.00', 91400, '2023-04-12 02:25:32', 'Confirm'),
+(5, 6, 'Jaime', 'dressed meat', 500, '100.00', 50000, '2023-05-10 02:26:52', 'Confirm'),
+(6, 7, 'admin', 'tosino', 400, '457.00', 182800, '2023-06-07 02:27:57', 'Confirm'),
+(7, 8, 'ron', 'tosino', 50, '457.00', 22850, '2023-07-22 02:29:04', 'Confirm'),
+(8, 9, 'Jaime', 'dressed meat', 200, '100.00', 20000, '2023-08-13 02:30:48', 'Confirm'),
+(9, 10, 'Jaime', 'tosino', 100, '457.00', 45700, '2023-09-19 02:32:45', 'Confirm'),
+(10, 11, 'admin', 'tosino', 250, '457.00', 114250, '2023-10-17 02:37:58', 'Confirm'),
+(12, 13, 'Jaime', 'dressed meat', 500, '100.00', 50000, '2023-11-26 02:40:38', 'Confirm'),
+(70, 35, 'parabakalaxSz', 'tosino', 3, '457.00', 1371, '2023-12-16 06:31:16', 'Confirm'),
+(71, 28, 'efse', 'dressed meat', 444, '100.00', 44400, '2023-12-16 07:33:17', 'Confirm'),
+(72, 35, 'parabakalaxSz', 'tosino', 99, '457.00', 451516, '2023-12-16 07:38:42', 'Confirm');
 
 --
 -- Indexes for dumped tables
@@ -554,7 +576,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users_orders`
 --
 ALTER TABLE `users_orders`
-  MODIFY `o_id` int(222) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `o_id` int(222) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `walkin_orders`
