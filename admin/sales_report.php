@@ -257,42 +257,72 @@ if (empty($_SESSION["adm_id"])) {
                                                             die("Connection failed: " . $conn->connect_error);
                                                         }
 
-                                                        // SQL query to select data from the first table
-                                                        $sqlTable1 = "SELECT * FROM users_orders";
-                                                        $resultTable1 = $conn->query($sqlTable1);
+                                                        // // SQL query to select data from the first table
+                                                        // $sqlTable1 = "SELECT * FROM users_orders";
+                                                        // $resultTable1 = $conn->query($sqlTable1);
 
-                                                        // Create an array to store the data for the first table
-                                                        $dataTable1 = array();
+                                                        // // Create an array to store the data for the first table
+                                                        // $dataTable1 = array();
 
-                                                        // Fetch the data from the result set for the first table
-                                                        if ($resultTable1->num_rows > 0) {
-                                                            while ($row = $resultTable1->fetch_assoc()) {
-                                                                $dataTable1[] = $row["total"];
-                                                                $datetable[] =  date_format(date_create($row['date']), "M, j, Y");
+                                                        // // Fetch the data from the result set for the first table
+                                                        // if ($resultTable1->num_rows > 0) {
+                                                        //     while ($row = $resultTable1->fetch_assoc()) {
+                                                        //         $dataTable1[] = $row["total"];
+                                                        //         $datetable[] =  date_format(date_create($row['date']), "M, j, Y");
+                                                        //     }
+                                                        // } else {
+                                                        //     echo "0 results for Table 1";
+                                                        // }
+
+                                                        $currentYear = date("Y");
+
+                                                        $walkinQuery = "SELECT MONTH(date) AS month, SUM(total) AS total_value FROM walkin_orders WHERE SUBSTRING(date, 1, 4) = 2023 AND status = 'Confirm' GROUP BY MONTH(date) ORDER BY date";
+                                                        $walkinRes = $conn->query($walkinQuery);
+                                                        $walkin = array();
+
+                                                        if ($walkinRes) {
+                                                            while ($row = $walkinRes->fetch_assoc()) {
+                                                                // Process each row of data here
+                                                                // echo "{$row['month']}: {$row['total_value']} <br>";
+                                                                array_push($walkin, $row['total_value']);
                                                             }
                                                         } else {
-                                                            echo "0 results for Table 1";
+                                                            echo "Query failed: " . $conn->error;
                                                         }
 
                                                         // SQL query to select data from the second table
-                                                        $sqlTable2 = "SELECT * FROM walkin_orders ";
-                                                        $resultTable2 = $conn->query($sqlTable2);
+                                                        // $sqlTable2 = "SELECT * FROM walkin_orders ";
+                                                        // $resultTable2 = $conn->query($sqlTable2);
 
 
-                                                        // Create an array to store the data for the second table
-                                                        $dataTable2 = array();
+                                                        // // Create an array to store the data for the second table
+                                                        // $dataTable2 = array();
 
 
                                                         $limit = 7;
 
-                                                        // Fetch the data from the result set for the second table
-                                                        if ($resultTable2->num_rows > 0) {
-                                                            while ($row = $resultTable2->fetch_assoc()) {
-                                                                $dataTable2[] = $row["total"];
-                                                                $dateTable[] =  date_format(date_create($row['date']), "M, j, Y");
+                                                        // // Fetch the data from the result set for the second table
+                                                        // if ($resultTable2->num_rows > 0) {
+                                                        //     while ($row = $resultTable2->fetch_assoc()) {
+                                                        //         $dataTable2[] = $row["total"];
+                                                        //         $dateTable[] =  date_format(date_create($row['date']), "M, j, Y");
+                                                        //     }
+                                                        // } else {
+                                                        //     echo "0 results for Table 2";
+                                                        // }
+
+                                                        $onlineQuery = "SELECT MONTH(date) AS month, SUM(total) AS total_value FROM users_orders WHERE SUBSTRING(date, 1, 4) = 2023 GROUP BY MONTH(date) ORDER BY date";
+                                                        $onlineRes = $conn->query($onlineQuery);
+                                                        $online = array();
+
+                                                        if ($onlineRes) {
+                                                            while ($row = $onlineRes->fetch_assoc()) {
+                                                                // Process each row of data here
+                                                                // echo "{$row['month']}: {$row['total_value']} <br>";
+                                                                array_push($online, $row['total_value']);
                                                             }
                                                         } else {
-                                                            echo "0 results for Table 2";
+                                                            echo "Query failed: " . $conn->error;
                                                         }
 
                                                         // Close the connection
@@ -342,21 +372,28 @@ if (empty($_SESSION["adm_id"])) {
 
                                                             <script>
                                                                 // setup 
+                                                                let walkinData = <?php echo json_encode($walkin, JSON_HEX_TAG); ?>;
+                                                                let onlineData = <?php echo json_encode($online, JSON_HEX_TAG); ?>;
+
+                                                                const yearLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
                                                                 const data = {
-                                                                    labels: <?php echo json_encode($dateTable); ?>,
+                                                                    labels: yearLabels,
                                                                     datasets: [{
                                                                             label: 'Online Sales',
-                                                                            data: <?php echo json_encode($dataTable1); ?>,
+                                                                            data: onlineData,
+                                                                            fill: true,
                                                                             backgroundColor: 'rgba(255, 26, 104, 0.2)',
                                                                             borderColor: 'rgba(255, 26, 104, 1)',
-                                                                            borderWidth: 1
+                                                                            borderWidth: 2
                                                                         },
                                                                         {
                                                                             label: 'Walkin Sales',
-                                                                            data: <?php echo json_encode($dataTable2); ?>,
+                                                                            data: walkinData,
+                                                                            fill: true,
                                                                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
                                                                             borderColor: 'rgba(54, 162, 235, 1)',
-                                                                            borderWidth: 1
+                                                                            borderWidth: 2
                                                                         }
                                                                     ]
                                                                 };
@@ -397,14 +434,7 @@ if (empty($_SESSION["adm_id"])) {
                                                                     scales: {
                                                                         y: {
                                                                             ticks: {
-                                                                                callback: function(date) {
-                                                                                    // Display the limit label
-                                                                                    if (date === <?php echo $limit; ?>) {
-                                                                                        return 'Limit: ' + date;
-                                                                                    } else {
-                                                                                        return date;
-                                                                                    }
-                                                                                }
+                                                                                
                                                                             }
                                                                         }
                                                                     }
