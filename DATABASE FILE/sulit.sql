@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 05, 2024 at 04:12 AM
+-- Generation Time: Jan 06, 2024 at 02:00 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -386,7 +386,8 @@ INSERT INTO `users_orders` (`o_id`, `u_id`, `d_id`, `title`, `quantity`, `price`
 (45, 8, 5, 'tosino', 300, '457.00', 137100, 'closed', '2023-08-15 03:00:19'),
 (46, 8, 5, 'tosino', 450, '457.00', 205650, 'closed', '2023-09-27 03:01:57'),
 (47, 10, 5, 'tosino', 400, '457.00', 182800, 'closed', '2023-10-11 03:02:53'),
-(48, 10, 7, 'dressed meat', 2000, '100.00', 200000, 'closed', '2023-11-14 03:04:07');
+(48, 10, 7, 'dressed meat', 2000, '100.00', 200000, 'closed', '2023-11-14 03:04:07'),
+(49, 8, 36, 'tosino', 200, '457.00', 91400, 'closed', '2024-01-06 12:39:20');
 
 -- --------------------------------------------------------
 
@@ -421,6 +422,7 @@ INSERT INTO `walkin_orders` (`w_id`, `d_id`, `user`, `title`, `quantity`, `price
 (8, 9, 'Jaime', 'dressed meat', 200, '100.00', 20000, '2023-08-13 02:30:48', 'Confirm'),
 (9, 10, 'Jaime', 'tosino', 100, '457.00', 45700, '2023-09-19 02:32:45', 'Confirm'),
 (10, 11, 'admin', 'tosino', 250, '457.00', 114250, '2023-10-17 02:37:58', 'Confirm'),
+(11, 13, 'new', 'tosino', 100, '457.00', 45700, '2024-01-06 05:57:42', 'Confirm'),
 (12, 13, 'Jaime', 'dressed meat', 500, '100.00', 50000, '2023-11-26 02:40:38', 'Confirm'),
 (70, 35, 'parabakalaxSz', 'tosino', 3, '457.00', 1371, '2023-12-16 06:31:16', 'Confirm'),
 (71, 28, 'efse', 'dressed meat', 444, '100.00', 44400, '2023-12-16 07:33:17', 'Confirm'),
@@ -576,7 +578,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `users_orders`
 --
 ALTER TABLE `users_orders`
-  MODIFY `o_id` int(222) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `o_id` int(222) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `walkin_orders`

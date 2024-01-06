@@ -7,6 +7,19 @@ session_start();
 
 // try push
 
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "sulit";
+
+// Create a connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
 if (empty($_SESSION["adm_id"])) {
     header('location:index.php');
 } else {
@@ -23,7 +36,28 @@ if (empty($_SESSION["adm_id"])) {
         <link href="css/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
         <link href="css/helper.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                font-family: sans-serif;
+            }
 
+            .chartContainer {
+                max-width: 600px;
+                margin: 20px auto;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .chartBox {
+                padding: 20px;
+                background-color: #f8f8f8;
+            }
+        </style>
+        <!-- Include Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     </head>
 
@@ -216,236 +250,40 @@ if (empty($_SESSION["adm_id"])) {
                                                         <h4 class="m-b-0 text-white">Sales Report Graph</h4>
                                                     </div>
 
-                                                    <body>
+                                                        <form id="yearTag">
+                                                            <label for="selectYear">Choose an option:</label>
+                                                            <select id="selectYear" onchange="fetchData()">
+                                                                <option class="btn btn-primary" data-toggle="modal" data-target="#addmodal" style="margin-bottom: 10px; margin-left: 88%" value="">Select Year</option>
+                                                                <?php
 
-                                                        <label for="selectOption">Choose an option:</label>
-                                                        <select id="selectOption" onchange="displaySelected()">
-                                                            <option class="btn btn-primary" data-toggle="modal" data-target="#addmodal" style="margin-bottom: 10px; margin-left: 88%" value="">Select Month</option>
-                                                            <?php
-                                                            for ($month = 1; $month <= 12; $month++) {
-                                                                $monthName = date("F", mktime(0, 0, 0, $month, 1));
-                                                                echo "<option value='$month'>$monthName</option>";
-                                                            }
-                                                            ?>
-                                                        </select>
+                                                                $query = "SELECT DISTINCT YEAR(date) AS unique_year FROM walkin_orders";
+                                                                $result = $conn->query($query);
+                                                                $years = array();
 
-                                                        <p id="selectedOption">Selected option will be displayed here.</p>
-
-                                                        <script>
-                                                            function displaySelected() {
-                                                                var selectedOption = document.getElementById("selectOption").value;
-                                                                document.getElementById("selectedOption").textContent = "Selected option: " + selectedOption;
-                                                            }
-                                                        </script>
+                                                                if ($result) {
+                                                                    while ($row = $result->fetch_assoc()) {
+                                                                        array_push($years, $row['unique_year']);
+                                                                    }
+                                                                } else {
+                                                                    echo "Query failed: ";
+                                                                }
+                                                                for ($i = 0;$i < count($years); $i++) {
+                                                                    echo "<option value=$years[$i]>$years[$i]</option>";
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </form>
 
                                                         </tbody>
-
-
-                                                        <?php
-
-                                                        //graph
-                                                        $servername = "localhost";
-                                                        $username = "root";
-                                                        $password = "";
-                                                        $dbname = "sulit";
-
-                                                        // Create a connection
-                                                        $conn = new mysqli($servername, $username, $password, $dbname);
-
-                                                        // Check connection
-                                                        if ($conn->connect_error) {
-                                                            die("Connection failed: " . $conn->connect_error);
-                                                        }
-
-                                                        // // SQL query to select data from the first table
-                                                        // $sqlTable1 = "SELECT * FROM users_orders";
-                                                        // $resultTable1 = $conn->query($sqlTable1);
-
-                                                        // // Create an array to store the data for the first table
-                                                        // $dataTable1 = array();
-
-                                                        // // Fetch the data from the result set for the first table
-                                                        // if ($resultTable1->num_rows > 0) {
-                                                        //     while ($row = $resultTable1->fetch_assoc()) {
-                                                        //         $dataTable1[] = $row["total"];
-                                                        //         $datetable[] =  date_format(date_create($row['date']), "M, j, Y");
-                                                        //     }
-                                                        // } else {
-                                                        //     echo "0 results for Table 1";
-                                                        // }
-
-                                                        $currentYear = date("Y");
-
-                                                        $walkinQuery = "SELECT MONTH(date) AS month, SUM(total) AS total_value FROM walkin_orders WHERE SUBSTRING(date, 1, 4) = 2023 AND status = 'Confirm' GROUP BY MONTH(date) ORDER BY date";
-                                                        $walkinRes = $conn->query($walkinQuery);
-                                                        $walkin = array();
-
-                                                        if ($walkinRes) {
-                                                            while ($row = $walkinRes->fetch_assoc()) {
-                                                                // Process each row of data here
-                                                                // echo "{$row['month']}: {$row['total_value']} <br>";
-                                                                array_push($walkin, $row['total_value']);
-                                                            }
-                                                        } else {
-                                                            echo "Query failed: " . $conn->error;
-                                                        }
-
-                                                        // SQL query to select data from the second table
-                                                        // $sqlTable2 = "SELECT * FROM walkin_orders ";
-                                                        // $resultTable2 = $conn->query($sqlTable2);
-
-
-                                                        // // Create an array to store the data for the second table
-                                                        // $dataTable2 = array();
-
-
-                                                        $limit = 7;
-
-                                                        // // Fetch the data from the result set for the second table
-                                                        // if ($resultTable2->num_rows > 0) {
-                                                        //     while ($row = $resultTable2->fetch_assoc()) {
-                                                        //         $dataTable2[] = $row["total"];
-                                                        //         $dateTable[] =  date_format(date_create($row['date']), "M, j, Y");
-                                                        //     }
-                                                        // } else {
-                                                        //     echo "0 results for Table 2";
-                                                        // }
-
-                                                        $onlineQuery = "SELECT MONTH(date) AS month, SUM(total) AS total_value FROM users_orders WHERE SUBSTRING(date, 1, 4) = 2023 GROUP BY MONTH(date) ORDER BY date";
-                                                        $onlineRes = $conn->query($onlineQuery);
-                                                        $online = array();
-
-                                                        if ($onlineRes) {
-                                                            while ($row = $onlineRes->fetch_assoc()) {
-                                                                // Process each row of data here
-                                                                // echo "{$row['month']}: {$row['total_value']} <br>";
-                                                                array_push($online, $row['total_value']);
-                                                            }
-                                                        } else {
-                                                            echo "Query failed: " . $conn->error;
-                                                        }
-
-                                                        // Close the connection
-                                                        $conn->close();
-
-                                                        ?>
-
-                                                        <!DOCTYPE html>
-                                                        <html lang="en">
-
-                                                        <head>
-                                                            <!-- Your existing head content goes here -->
-                                                            <style>
-                                                                * {
-                                                                    margin: 0;
-                                                                    padding: 0;
-                                                                    font-family: sans-serif;
-                                                                }
-
-                                                                .chartContainer {
-                                                                    max-width: 600px;
-                                                                    margin: 20px auto;
-                                                                    border-radius: 10px;
-                                                                    overflow: hidden;
-                                                                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                                                                }
-
-                                                                .chartBox {
-                                                                    padding: 20px;
-                                                                    background-color: #f8f8f8;
-                                                                }
-                                                            </style>
-                                                            <!-- Include Chart.js -->
-                                                            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-                                                        </head>
-
-                                                        <body>
-
-                                                            <div class="chartMenu">
-                                                                <!-- Additional content for chart menu if needed -->
+                                                        
+                                                        <div class="chartMenu">
+                                                            <!-- Additional content for chart menu if needed -->
+                                                        </div>
+                                                        <div class="chartCard">
+                                                            <div class="chartBox">
+                                                                <canvas id="myChart"></canvas>
                                                             </div>
-                                                            <div class="chartCard">
-                                                                <div class="chartBox">
-                                                                    <canvas id="myChart"></canvas>
-                                                                </div>
-                                                            </div>
-
-                                                            <script>
-                                                                // setup 
-                                                                let walkinData = <?php echo json_encode($walkin, JSON_HEX_TAG); ?>;
-                                                                let onlineData = <?php echo json_encode($online, JSON_HEX_TAG); ?>;
-
-                                                                const yearLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-                                                                const data = {
-                                                                    labels: yearLabels,
-                                                                    datasets: [{
-                                                                            label: 'Online Sales',
-                                                                            data: onlineData,
-                                                                            fill: true,
-                                                                            backgroundColor: 'rgba(255, 26, 104, 0.2)',
-                                                                            borderColor: 'rgba(255, 26, 104, 1)',
-                                                                            borderWidth: 2
-                                                                        },
-                                                                        {
-                                                                            label: 'Walkin Sales',
-                                                                            data: walkinData,
-                                                                            fill: true,
-                                                                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                                                                            borderColor: 'rgba(54, 162, 235, 1)',
-                                                                            borderWidth: 2
-                                                                        }
-                                                                    ]
-                                                                };
-
-                                                                // config 
-                                                                const config = {
-                                                                    type: 'line',
-                                                                    data,
-                                                                    options: {
-                                                                        scales: {
-                                                                            x: [{
-
-                                                                            }],
-                                                                        }
-                                                                    }
-                                                                };
-                                                                const actions = [{
-                                                                    name: 'Randomize',
-                                                                    handler(chart) {
-                                                                        chart.data.datasets.forEach(dataset => {
-                                                                            dataset.data = Utils.numbers({
-                                                                                count: chart.data.labels.length,
-                                                                                min: -100,
-                                                                                max: 100
-                                                                            });
-                                                                        });
-                                                                        chart.update();
-                                                                    }
-                                                                }, ]
-
-
-                                                                // render init block
-                                                                const myChart = new Chart(
-                                                                    document.getElementById('myChart'),
-                                                                    config
-                                                                );
-                                                                var options = {
-                                                                    scales: {
-                                                                        y: {
-                                                                            ticks: {
-                                                                                
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            </script>
-                                                        </body>
-
-
-
-
-                                                        </script>
+                                                        </div>
                                                 </div>
                                             </div>
 
@@ -533,6 +371,151 @@ if (empty($_SESSION["adm_id"])) {
                                     <script src="js/jquery/4-Set-Budget.js"></script>
                                 </div>
     </body>
+    <script src="https://code.jquery.com/jquery-3.6.4.mim.js"></script>
+
+    <script>
+        const selectYear = document.getElementById('selectYear');
+        let currentYear = new Date().getFullYear();
+
+        let walkinData = <?php echo json_encode($walkin, JSON_HEX_TAG); ?>;
+        let onlineData = <?php echo json_encode($online, JSON_HEX_TAG); ?>;
+
+        const yearLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        const data = {
+            labels: yearLabels,
+            datasets: [
+                {
+                    label: 'Online Sales',
+                    data: onlineData,
+                    fill: true,
+                    backgroundColor: 'rgba(255, 26, 104, 0.2)',
+                    borderColor: 'rgba(255, 26, 104, 1)',
+                    borderWidth: 2
+                },
+                {
+                    label: 'Walkin Sales',
+                    data: walkinData,
+                    fill: true,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2
+                }
+            ]
+        };
+
+        // config 
+        const config = {
+            type: 'line',
+            data,
+            options: {
+                scales: {
+                    y: {
+                    ticks: {
+                        beginAtZero: true,
+                        },
+                    },
+                    x: {
+                    ticks: {
+                        },
+                    },
+                }
+            }
+        };
+        const actions = [{
+            name: 'Randomize',
+            handler(chart) {
+                chart.data.datasets.forEach(dataset => {
+                    dataset.data = Utils.numbers({
+                        count: chart.data.labels.length,
+                        min: -100,
+                        max: 100
+                    });
+                });
+                chart.update();
+            }
+        }, ]
+
+
+        // render init block
+        const myChart = new Chart(
+            document.getElementById('myChart'),
+            config
+        );
+        function updateChart(newData) {
+            myChart.data = newData;
+
+            myChart.update();
+        }
+
+        // set the select tag option to select the current year
+        for (let i = 0; i < selectYear.options.length; i++) {
+            console.log(selectYear.options[i].value);
+            if (selectYear.options[i].value == currentYear) {
+                selectYear.options[i].selected = true;
+                break;
+            }
+        }
+
+        function fetchData() {
+            let selectedYear = $('#selectYear').val();
+            walkinData = [];
+            onlineData = [];
+
+            $.ajax({
+                type: "POST",
+                url: "fetch_walkin_orders.php",
+                data: {
+                    year: selectedYear
+                },
+                success: function (data1) {
+                    walkinData = data1.split(',').map(Number);
+                    walkinData.pop();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "fetch_users_orders.php",
+                        data: {
+                            year: selectedYear
+                        },
+                        success: function (data2) {
+                            onlineData = data2.split(',').map(Number);
+                            onlineData.pop();
+                            console.log(walkinData);
+                            console.log(onlineData);
+
+                            let newData = {
+                                labels: yearLabels,
+                                datasets: [
+                                    {
+                                        label: 'Online Sales',
+                                        data: onlineData,
+                                        fill: true,
+                                        backgroundColor: 'rgba(255, 26, 104, 0.2)',
+                                        borderColor: 'rgba(255, 26, 104, 1)',
+                                        borderWidth: 2
+                                    },
+                                    {
+                                        label: 'Walkin Sales',
+                                        data: walkinData,
+                                        fill: true,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                        borderColor: 'rgba(54, 162, 235, 1)',
+                                        borderWidth: 2
+                                    }
+                                ]
+                            }
+                            updateChart(newData);
+                        }
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            fetchData();
+        });
+    </script>
 
 </html>
 <?php
